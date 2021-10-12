@@ -44,6 +44,7 @@ namespace app
         auto isHomeScreenFocused() -> bool;
         void onStart() override;
         sys::MessagePointer handleSwitchWindow(sys::Message *msgl) override;
+        void handleLowBatteryNotification(manager::actions::ActionParamsPtr &&data);
     };
 
     template <> struct ManifestTraits<ApplicationBellMain>

@@ -22,6 +22,8 @@
 #include <service-appmgr/Controller.hpp>
 #include <system/messages/SystemManagerMessage.hpp>
 #include <common/popups/BedtimeNotificationWindow.hpp>
+#include <apps-common/WindowsPopupFilter.hpp>
+#include <common/windows/BellTurnOffWindow.hpp>
 
 namespace app
 {
@@ -32,6 +34,25 @@ namespace app
                                              std::uint32_t stackDepth)
         : Application(name, parent, statusIndicators, startInBackground, stackDepth)
     {
+
+        getPopupFilter().addAppDependentFilter([&](const gui::PopupRequestParams &popupParams) {
+            auto val = ((isCurrentWindow(gui::popup::resolveWindowName(gui::popup::ID::Reboot))) ||
+                        (isCurrentWindow(gui::popup::resolveWindowName(gui::popup::ID::PowerOff))) ||
+                        (isCurrentWindow(gui::BellTurnOffWindow::name)));
+            if (val)
+                return val;
+            if (((popupParams.getPopupId() == gui::popup::ID::AlarmActivated ||
+                  popupParams.getPopupId() == gui::popup::ID::AlarmDeactivated)) and
+                (not isHomeScreenFocused())) {
+                // for some reason here was:
+                //                switchWindow(gui::popup::resolveWindowName(id));
+                // not ::showPopup()
+                // TODO discuss with @Przemek
+                return false;
+            }
+            return false;
+        });
+
         bus.channels.push_back(sys::BusChannel::ServiceDBNotifications);
         addActionReceiver(manager::actions::ShowAlarm, [this](auto &&data) {
             switchWindow(gui::name::window::main_window, std::move(data));
@@ -120,27 +141,12 @@ namespace app
         if (respMessage != nullptr && respMessage->retCode == sys::ReturnCodes::Success) {
             return retMsg;
         }
-        auto msg = dynamic_cast<db::NotificationMessage *>(msgl);
-        if (msg != nullptr) {
-            for (auto &[name, window] : windowsStack.windows) {
-                window->onDatabaseMessage(msg);
-            }
+        if (auto msg = dynamic_cast<db::NotificationMessage *>(msgl); msg != nullptr) {
+            handleUI_DBNotification(msgl,
+                                    [&](sys::Message * /*unused*/, const std::string & /*unused*/) { return true; });
             return sys::msgHandled();
         }
-
         return handleAsyncResponse(resp);
-    }
-
-    void ApplicationBellMain::showPopup(gui::popup::ID id, const gui::PopupRequestParams *params)
-    {
-        if (id == gui::popup::ID::AlarmActivated || id == gui::popup::ID::AlarmDeactivated) {
-            if (not isHomeScreenFocused()) {
-                switchWindow(gui::popup::resolveWindowName(id));
-            }
-        }
-        else {
-            Application::showPopup(id, params);
-        }
     }
 
     auto ApplicationBellMain::isHomeScreenFocused() -> bool
