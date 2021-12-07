@@ -60,6 +60,7 @@ target_sources(application-bell-common
         include/common/models/BedtimeModel.hpp
         include/common/models/TimeModel.hpp
         include/common/models/AudioModel.hpp
+        include/common/models/FrontlightModel.hpp
         include/common/popups/presenter/AlarmActivatedPresenter.hpp
         include/common/popups/AlarmActivatedWindow.hpp
         include/common/popups/AlarmDeactivatedWindow.hpp

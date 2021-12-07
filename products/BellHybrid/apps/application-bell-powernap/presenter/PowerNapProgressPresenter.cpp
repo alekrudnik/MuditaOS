@@ -26,9 +26,10 @@ namespace app::powernap
                                                          settings::Settings *settings,
                                                          std::unique_ptr<AbstractSoundsRepository> soundsRepository,
                                                          AbstractAudioModel &audioModel,
+                                                         app::bell_settings::AbstractFrontlightModel &frontLightModel,
                                                          std::unique_ptr<AbstractTimeModel> timeModel)
-        : app{app}, settings{settings}, soundsRepository{std::move(soundsRepository)},
-          audioModel{audioModel}, timeModel{std::move(timeModel)},
+        : app{app}, settings{settings}, soundsRepository{std::move(soundsRepository)}, audioModel{audioModel},
+          frontLightModel{frontLightModel}, timeModel{std::move(timeModel)},
           napAlarmTimer{sys::TimerFactory::createSingleShotTimer(
               app, powernapAlarmTimerName, powernapAlarmTimeout, [this](sys::Timer &) { onNapAlarmFinished(); })}
 
@@ -56,6 +57,14 @@ namespace app::powernap
     }
     void PowerNapProgressPresenter::onNapFinished()
     {
+        const std::string frontlightEnabled =
+            settings->getValue(bell::settings::Alarm::lightActive, settings::SettingsScope::Global);
+
+        if (frontlightEnabled == std::string("1")) {
+            frontLightModel.restorePreviousState();
+            frontLightModel.setStatus(true);
+        }
+
         const auto filePath = soundsRepository->titleToPath(
             settings->getValue(bell::settings::Alarm::tone, settings::SettingsScope::Global));
 
