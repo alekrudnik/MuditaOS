@@ -7,6 +7,14 @@
 
 namespace gui
 {
+    namespace style
+    {
+        namespace logo
+        {
+            constexpr auto y = 163;
+        } // namespace logo
+
+    } // namespace style
     class PhoneLockedWindowLogo : public PhoneLockedWindowBase
     {
       private:

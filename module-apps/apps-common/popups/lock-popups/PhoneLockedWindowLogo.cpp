@@ -4,6 +4,7 @@
 #include "PhoneLockedWindowLogo.hpp"
 #include <service-appmgr/Controller.hpp>
 #include <ImageBox.hpp>
+#include <Style.hpp>
 
 namespace gui
 {
@@ -15,10 +16,14 @@ namespace gui
 
     void PhoneLockedWindowLogo::buildInterface()
     {
-        auto quoteImage = new ImageBox(this, new Image("logo", ImageTypeSpecifier::W_G));
-        quoteImage->setMinimumSizeToFitImage();
-        quoteImage->setAlignment(Alignment(Alignment::Horizontal::Center, Alignment::Vertical::Top));
-        quoteImage->setMargins(Margins(0, 0, 0, 0));
+        auto logoImage = new ImageBox(this,
+                                      0,
+                                      style::logo::y,
+                                      ::style::window_width,
+                                      ::style::window::default_body_height - style::logo::y,
+                                      new Image("logo", ImageTypeSpecifier::W_G));
+        logoImage->setMinimumSizeToFitImage();
+        logoImage->setAlignment(Alignment(Alignment::Horizontal::Center, Alignment::Vertical::Top));
     }
 
     void PhoneLockedWindowLogo::onBeforeShow(ShowMode mode, SwitchData *data)
