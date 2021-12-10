@@ -3,36 +3,25 @@
 
 #pragma once
 
-#include <AppWindow.hpp>
+#include "PhoneLockedWindowBase.hpp"
 #include <widgets/ClockDateWidget.hpp>
 #include <notifications/NotificationsModel.hpp>
 #include <ListView.hpp>
 
-namespace app
-{
-    class ApplicationDesktop;
-}
-
 namespace gui
 {
-    class PhoneLockedWindow : public AppWindow
+    class PhoneLockedWindowClock : public PhoneLockedWindowBase
     {
-      protected:
+      private:
         gui::ClockDateWidget *clockDate                             = nullptr;
         gui::ListView *notificationsList                            = nullptr;
         std::shared_ptr<gui::NotificationsModel> notificationsModel = nullptr;
         bool refreshedOnPhoneLockTimeLock                           = false;
 
-        bool processLongReleaseEvent(const InputEvent &inputEvent);
-
       public:
-        PhoneLockedWindow(app::ApplicationCommon *app, const std::string &name);
-
-        bool onInput(const InputEvent &inputEvent) override;
-        void onBeforeShow(ShowMode mode, SwitchData *data) override;
+        PhoneLockedWindowClock(app::ApplicationCommon *app, const std::string &name);
         void buildInterface() override;
-        status_bar::Configuration configureStatusBar(status_bar::Configuration appConfiguration) override;
-
+        void onBeforeShow(ShowMode mode, SwitchData *data) override;
         bool updateTime() override;
     };
 

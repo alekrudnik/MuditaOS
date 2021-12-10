@@ -18,7 +18,10 @@ target_sources(apps-common
 		VolumeWindow.cpp
 		WindowWithTimer.cpp
 		lock-popups/PhoneLockedInfoWindow.cpp
-		lock-popups/PhoneLockedWindow.cpp
+		lock-popups/PhoneLockedWindowBase.cpp
+		lock-popups/PhoneLockedWindowClock.cpp
+		lock-popups/PhoneLockedWindowQuote.cpp
+		lock-popups/PhoneLockedWindowLogo.cpp
 		lock-popups/PhoneLockInputWindow.cpp
 		lock-popups/PhoneLockChangeInfoWindow.cpp
 		lock-popups/SimLockInputWindow.cpp
@@ -26,6 +29,7 @@ target_sources(apps-common
 		lock-popups/SimNotReadyWindow.cpp
 		presenter/PowerOffPresenter.cpp
 		presenter/AlarmPresenter.cpp
+		presenter/QuotesPresenter.cpp
 
 	PRIVATE
 		HomeModesWindow.hpp
@@ -40,12 +44,16 @@ target_sources(apps-common
 		data/PopupData.hpp
 		lock-popups/PhoneLockedInfoData.hpp
 		lock-popups/PhoneLockedInfoWindow.hpp
-		lock-popups/PhoneLockedWindow.hpp
+		lock-popups/PhoneLockedWindowBase.hpp
+		lock-popups/PhoneLockedWindowClock.hpp
+		lock-popups/PhoneLockedWindowQuote.hpp
+		lock-popups/PhoneLockedWindowLogo.hpp
 		lock-popups/PhoneLockInputWindow.hpp
 		lock-popups/PhoneLockChangeInfoWindow.hpp
 		lock-popups/SimLockInputWindow.hpp
 		lock-popups/SimInfoWindow.hpp
 		lock-popups/SimNotReadyWindow.hpp
 		presenter/PowerOffPresenter.hpp
+		presenter/QuotesPresenter.hpp
 
 )
