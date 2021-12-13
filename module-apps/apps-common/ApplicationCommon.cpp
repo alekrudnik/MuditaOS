@@ -293,8 +293,6 @@ namespace app
         }
     }
 
-    /// wait we have it already in some class
-    /// BUT SHIT IT'S NOT PROPAGATED :(((
     void ApplicationCommon::switchWindowPopup(const std::string &windowName,
                                               const gui::popup::Disposition &d,
                                               std::unique_ptr<gui::SwitchData> data,
@@ -587,7 +585,6 @@ namespace app
         }
 
         LOG_DEBUG("Current window: %s vs %s", getCurrentWindow()->getName().c_str(), msg->getWindowName().c_str());
-        // THIS IS IN TEST!
         const auto &[name, data] = msg->getSwitchData();
         pushWindow(name, data);
         getCurrentWindow()->handleSwitchData(switchData.get());
@@ -911,16 +908,21 @@ namespace app
         if (windowsStack().isEmpty()) {
             windowsStack().push(default_window, windowsFactory.build(this, default_window));
         }
-        return windowsStack().get(*windowsStack().get(topWindow));
+        auto windowname = windowsStack().get(topWindow);
+        auto window     = windowsStack().get(*windowname);
+        if (windowname != window->getName()) {
+            LOG_FATAL("Builtin vs Factory name mismatch ! %s vs %s", windowname->c_str(), window->getName().c_str());
+        }
+        return window;
     }
 
     bool ApplicationCommon::isCurrentWindow(const std::string &windowName) const noexcept
     {
-        const auto window = windowsStack().get(windowName);
-        if (window == nullptr) {
-            return false;
+        if (const auto &window = windowsStack().get(windowName); window != nullptr) {
+            return window->getName() == windowName;
         }
-        return window->getName() == windowName;
+        LOG_ERROR("no window: %s", windowName.c_str());
+        return false;
     }
 
     gui::AppWindow *ApplicationCommon::getWindow(const std::string &name)
