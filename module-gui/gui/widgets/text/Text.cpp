@@ -75,7 +75,12 @@ namespace gui
     }
 
     void Text::setTextType(TextType type)
-    {}
+    {
+        if (textType != type) {
+            textType = type;
+            drawLines();
+        }
+    }
 
     void Text::setTextLimitType(TextLimitType limitType, unsigned int val)
     {
@@ -362,7 +367,8 @@ namespace gui
                     getSizeMinusPadding(Axis::X, Area::Max) - TextCursor::defaultWidth,
                     getSizeMinusPadding(Axis::Y, Area::Max),
                     padding.top,
-                    padding.left);
+                    padding.left,
+                    textType);
 
         calculateAndRequestSize();
 
@@ -445,10 +451,15 @@ namespace gui
         drawLines();
     }
 
+    TextCursor *Text::createCursor()
+    {
+        return textType == TextType::MultiLine ? new TextLineCursor(this) : new TextCursor(this);
+    }
+
     void Text::buildCursor()
     {
         erase(cursor);
-        cursor = new TextLineCursor(this);
+        cursor = createCursor();
         cursor->setCursorStartPosition(cursorStartPosition);
         cursor->setAlignment(this->getAlignment());
         cursor->setMargins(this->getPadding());
@@ -497,7 +508,7 @@ namespace gui
             return false;
         }
 
-        if (isMode(EditMode::Scroll)) {
+        if (isMode(EditMode::Scroll) && textType == TextType::MultiLine) {
 
             debug_text("Text in scroll mode ignores left/right navigation");
             if (inputEvent.is(KeyCode::KEY_LEFT) || inputEvent.is(KeyCode::KEY_RIGHT)) {
@@ -505,11 +516,11 @@ namespace gui
             }
 
             if (inputEvent.is(KeyCode::KEY_DOWN)) {
-                return cursor->displayNextLine();
+                return cursor->handleNextLine();
             }
 
             if (inputEvent.is(KeyCode::KEY_UP)) {
-                return cursor->displayPreviousLine();
+                return cursor->handlePreviousLine();
             }
         }
 
@@ -636,7 +647,7 @@ namespace gui
         preDrawCursor.addChar(utfVal);
 
         preDrawLines->draw(
-            preDrawCursor, getSizeMinusPadding(Axis::X, Area::Max), text::npos, padding.top, padding.left);
+            preDrawCursor, getSizeMinusPadding(Axis::X, Area::Max), text::npos, padding.top, padding.left, textType);
 
         return preDrawLines;
     }
@@ -654,7 +665,7 @@ namespace gui
         preDrawCursor.addTextBlock(std::move(preDrawTextBlock));
 
         preDrawLines->draw(
-            preDrawCursor, getSizeMinusPadding(Axis::X, Area::Max), text::npos, padding.top, padding.left);
+            preDrawCursor, getSizeMinusPadding(Axis::X, Area::Max), text::npos, padding.top, padding.left, textType);
 
         return preDrawLines;
     }
