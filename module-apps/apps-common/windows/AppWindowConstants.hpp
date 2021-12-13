@@ -3,13 +3,7 @@
 
 #pragma once
 
-namespace gui
+namespace gui::name::window
 {
-    namespace name
-    {
-        namespace window
-        {
-            inline constexpr auto main_window = "MainWindow";
-        } // namespace window
-    }     // namespace name
-} // namespace gui
+    inline constexpr auto main_window = "MainWindow";
+} // namespace gui::name::window

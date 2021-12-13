@@ -29,13 +29,10 @@ namespace app
                              sys::ServicePriority priority)
         : ApplicationCommon(name, parent, statusIndicators, startInBackground, stackDepth, priority)
     {
-        /// TODO
-        /// just set HIGHEST priority for these 3 popup windows below
         getPopupFilter().addAppDependentFilter([&](const gui::PopupRequestParams &popupParams) {
             return ((isCurrentWindow(gui::popup::resolveWindowName(gui::popup::ID::Reboot))) ||
                     (isCurrentWindow(gui::popup::resolveWindowName(gui::popup::ID::PowerOff))) ||
                     (isCurrentWindow(gui::BellTurnOffWindow::name)));
-            /// < --this is part of application settings
         });
     }
 

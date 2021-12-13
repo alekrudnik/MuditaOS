@@ -4,6 +4,7 @@
 #pragma once
 
 #include <functional>
+#include <list>
 
 namespace gui
 {
@@ -16,11 +17,11 @@ namespace app
 namespace gui::popup
 {
     /// This filter class is used just to filter next popup to handle if any
-    /// it can and should be overriden to filter out only interesting us popups right now
+    /// it can and should be overriden to filter out only desired ones at the time
     class Filter
     {
       private:
-        std::function<bool(const gui::PopupRequestParams &)> appDependentFilter = nullptr;
+        std::list<std::function<bool(const gui::PopupRequestParams &)>> appDependentFilter;
         app::WindowsStack *stack                                                = nullptr;
 
       public:

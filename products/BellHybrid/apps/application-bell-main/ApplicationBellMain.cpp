@@ -44,10 +44,6 @@ namespace app
             if (((popupParams.getPopupId() == gui::popup::ID::AlarmActivated ||
                   popupParams.getPopupId() == gui::popup::ID::AlarmDeactivated)) and
                 (not isHomeScreenFocused())) {
-                // for some reason here was:
-                //                switchWindow(gui::popup::resolveWindowName(id));
-                // not ::showPopup()
-                // TODO discuss with @Przemek
                 return false;
             }
             return false;

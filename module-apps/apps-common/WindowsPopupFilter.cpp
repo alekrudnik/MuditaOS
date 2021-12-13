@@ -15,9 +15,9 @@ namespace gui::popup
 
     bool Filter::is_ok(const gui::PopupRequestParams &params) const
     {
-        if (appDependentFilter != nullptr) {
-            if (auto result = appDependentFilter(params); not result) {
-                return result;
+        for (const auto &filter : appDependentFilter) {
+            if (filter != nullptr && not filter(params)) {
+                return false;
             }
         }
         if (stack != nullptr) {
@@ -40,7 +40,7 @@ namespace gui::popup
 
     void Filter::addAppDependentFilter(std::function<bool(const gui::PopupRequestParams &)> f)
     {
-        appDependentFilter = std::move(f);
+        appDependentFilter.push_back(f);
     }
 
 } // namespace gui::popup

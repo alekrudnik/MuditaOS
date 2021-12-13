@@ -866,7 +866,6 @@ namespace app
         return false;
     }
 
-    // oh this is kind of bad... we require popup start window to properly abort selected popup XD
     void ApplicationCommon::abortPopup(gui::popup::ID id)
     {
         const auto popupName = gui::popup::resolveWindowName(id);
