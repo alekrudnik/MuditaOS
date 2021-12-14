@@ -273,7 +273,7 @@ namespace app
 
         std::string window;
 #if DEBUG_APPLICATION_MANAGEMENT == 1
-        LOG_INFO("switching [%s] to window: %s data description: %s isPopup? %s",
+        LOG_INFO("switching [%s] to window: %s data description: %s",
                  GetName().c_str(),
                  windowName.length() ? windowName.c_str() : default_window.c_str(),
                  data ? data->getDescription().c_str() : "");
@@ -311,7 +311,7 @@ namespace app
             return;
         }
         LOG_INFO("Back to previous window: %s", window->c_str());
-        windowsStack().popTo(*window);
+        windowsStack().pop(*window);
         switchWindow(*window, gui::ShowMode::GUI_SHOW_RETURN);
     }
 
@@ -629,7 +629,7 @@ namespace app
             refreshWindow(msg->getRefreshMode());
         }
         else {
-            LOG_ERROR("Wont update window: %s in app: %s haveBuilder: %s is_on_top: %s",
+            LOG_ERROR("cant update window: %s in app: %s, params: haveBuilder: %s is_on_top: %s",
                       msg->getWindowName().c_str(),
                       GetName().c_str(),
                       haveBuilder ? "yes" : "no",
@@ -824,7 +824,7 @@ namespace app
     {
         auto rdata = dynamic_cast<gui::PopupRequestParams *>(params.get());
         if (rdata == nullptr) {
-            assert(0 && "this should never happen");
+            assert(0 && "invalid popup data received");
             return;
         }
         // two lines below is to **not** loose data on copy on dynamic_cast, but to move the data
@@ -867,11 +867,12 @@ namespace app
     {
         const auto popupName = gui::popup::resolveWindowName(id);
         LOG_INFO("abort popup: %s from window %s", popupName.c_str(), getCurrentWindow()->getName().c_str());
-        windowsStack().popTo(popupName);
+        windowsStack().pop(popupName);
         returnToPreviousWindow();
     }
 
-    bool ApplicationCommon::handleUI_DBNotification(sys::Message *msg, const UiNotificationFilter &filter)
+    bool ApplicationCommon::userInterfaceDBNotification([[maybe_unused]] sys::Message *msg,
+                                                        [[maybe_unused]] const UiNotificationFilter &filter)
     {
         bool handled = false;
         for (const auto &[name, window] : windowsStack()) {
@@ -890,7 +891,7 @@ namespace app
             LOG_INFO("Empty window request!");
             return;
         }
-        if (windowsStack().popTo(newWindow)) {
+        if (windowsStack().pop(newWindow)) {
             LOG_INFO("Get back to window!");
             return;
         }

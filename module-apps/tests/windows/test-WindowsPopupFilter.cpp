@@ -8,14 +8,14 @@
 #include <catch2/catch.hpp>
 #include <module-apps/apps-common/WindowsPopupQueue.hpp>
 
-TEST_CASE("WindowsPopupQueue::is_ok")
+TEST_CASE("WindowsPopupQueue::isPermitted")
 {
     auto prp = gui::PopupRequestParams(gui::popup::ID::Alarm, gui::popup::popupDisposition(gui::popup::ID::Alarm));
     gui::popup::Filter filter;
     SECTION("filter is ok, there is not stack")
     {
         filter.addAppDependentFilter([](const gui::PopupRequestParams &) -> bool { return true; });
-        REQUIRE(filter.is_ok(prp));
+        REQUIRE(filter.isPermitted(prp));
     }
 
     SECTION("just stack")
@@ -25,14 +25,14 @@ TEST_CASE("WindowsPopupQueue::is_ok")
 
         SECTION("stack is empty - it's ok to show popup")
         {
-            REQUIRE(filter.is_ok(prp));
+            REQUIRE(filter.isPermitted(prp));
         }
 
         SECTION("stack with same popup on top already")
         {
             auto w = std::make_unique<TestWindow>("wn");
             stack.push("wn", std::move(w));
-            REQUIRE(filter.is_ok(prp));
+            REQUIRE(filter.isPermitted(prp));
         }
 
         SECTION("stack with priority")
@@ -48,7 +48,7 @@ TEST_CASE("WindowsPopupQueue::is_ok")
                     gui::PopupRequestParams(gui::popup::ID::AlarmActivated,
                                             gui::popup::popupDisposition(gui::popup::ID::AlarmActivated,
                                                                          gui::popup::Disposition::Priority::Low));
-                REQUIRE(not filter.is_ok(prp));
+                REQUIRE(not filter.isPermitted(prp));
             }
             // higher priority & different popup on top
             {
@@ -56,7 +56,7 @@ TEST_CASE("WindowsPopupQueue::is_ok")
                     gui::PopupRequestParams(gui::popup::ID::AlarmActivated,
                                             gui::popup::popupDisposition(gui::popup::ID::AlarmActivated,
                                                                          gui::popup::Disposition::Priority::High));
-                REQUIRE(filter.is_ok(prp));
+                REQUIRE(filter.isPermitted(prp));
             }
             // equal priority & different popup on top - this is fine (see i.e. phone lock input )
             {
@@ -64,14 +64,14 @@ TEST_CASE("WindowsPopupQueue::is_ok")
                     gui::PopupRequestParams(gui::popup::ID::AlarmActivated,
                                             gui::popup::popupDisposition(gui::popup::ID::AlarmActivated,
                                                                          gui::popup::Disposition::Priority::Normal));
-                REQUIRE(filter.is_ok(prp));
+                REQUIRE(filter.isPermitted(prp));
             }
             // equal priority & same popup - this is not fine, i.e. alarm for alarm clock
             {
                 auto prp = gui::PopupRequestParams(
                     gui::popup::ID::Alarm,
                     gui::popup::popupDisposition(gui::popup::ID::Alarm, gui::popup::Disposition::Priority::Normal));
-                REQUIRE(not filter.is_ok(prp));
+                REQUIRE(not filter.isPermitted(prp));
             }
         }
     }
@@ -83,5 +83,5 @@ TEST_CASE("WindowsPopupQueue::addAppDependentFilter")
     auto prp = gui::PopupRequestParams(gui::popup::ID::Alarm);
     // create filter that accepts nothing
     filter.addAppDependentFilter([](const gui::PopupRequestParams &) -> bool { return false; });
-    REQUIRE(not filter.is_ok(prp));
+    REQUIRE(not filter.isPermitted(prp));
 }

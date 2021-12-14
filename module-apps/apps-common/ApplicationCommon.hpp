@@ -41,7 +41,7 @@
 namespace app
 {
     class WindowsStack;
-    typedef std::function<bool(sys::Message *, const std::string &name)> UiNotificationFilter;
+    using UiNotificationFilter = std::function<bool(sys::Message *, const std::string &name)>;
 } // namespace app
 
 namespace db
@@ -365,7 +365,7 @@ namespace app
         virtual bool tryShowPopup();
         void abortPopup(gui::popup::ID id);
 
-        bool handleUI_DBNotification(sys::Message *msg, const UiNotificationFilter &filter = nullptr);
+        bool userInterfaceDBNotification(sys::Message *msg, const UiNotificationFilter &filter = nullptr);
         virtual gui::popup::Filter &getPopupFilter() const;
 
       public:

@@ -62,7 +62,7 @@ namespace app
         return false;
     }
 
-    bool WindowsStack::popTo(const std::string &window)
+    bool WindowsStack::pop(const std::string &window)
     {
         auto ret = findInStack(window);
         if (ret != stack.end()) {

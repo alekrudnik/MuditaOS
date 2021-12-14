@@ -67,7 +67,7 @@ namespace app
         /// `drop` functions - remove any window on stack
         /// return false on pop empty
         bool pop() noexcept;
-        bool popTo(const std::string &window);
+        bool pop(const std::string &window);
         bool popLastWindow();
         bool drop(const std::string &window);
         void clear();

@@ -37,7 +37,7 @@ TEST_CASE("WindowsPopupQueue push")
 
 class NoneFilter : public gui::popup::Filter
 {
-    bool is_ok(const gui::PopupRequestParams & /*params*/) const override
+    bool isPermitted(const gui::PopupRequestParams & /*params*/) const override
     {
         return false;
     }

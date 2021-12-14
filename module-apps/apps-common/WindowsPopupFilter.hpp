@@ -27,6 +27,6 @@ namespace gui::popup
       public:
         void attachWindowsStack(app::WindowsStack *stack);
         void addAppDependentFilter(std::function<bool(const gui::PopupRequestParams &)> f);
-        virtual bool is_ok(const gui::PopupRequestParams &params) const;
+        virtual bool isPermitted(const gui::PopupRequestParams &params) const;
     };
 } // namespace gui::popup

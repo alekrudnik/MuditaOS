@@ -65,9 +65,10 @@ namespace app
             auto msg = dynamic_cast<db::NotificationMessage *>(msgl);
             LOG_DEBUG("Received notification");
             if (msg != nullptr) {
-                handleUI_DBNotification(msgl, [&](sys::Message * /*unused*/, const std::string & /*unused*/) {
-                    return msg->interface == db::Interface::Name::Contact;
-                });
+                userInterfaceDBNotification(msgl,
+                                            [&]([[maybe_unused]] sys::Message *, [[maybe_unused]] const std::string &) {
+                                                return msg->interface == db::Interface::Name::Contact;
+                                            });
                 return std::make_shared<sys::ResponseMessage>();
             }
         }

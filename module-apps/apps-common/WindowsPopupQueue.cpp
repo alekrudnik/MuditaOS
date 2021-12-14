@@ -9,7 +9,7 @@ namespace app
     std::optional<gui::popup::Request> WindowsPopupQueue::popRequest(const gui::popup::Filter &filter)
     {
         for (const auto &val : requests) {
-            if (filter.is_ok(val.getPopupParams())) {
+            if (filter.isPermitted(val.getPopupParams())) {
                 return {std::move(requests.extract(val).value())};
             }
         }

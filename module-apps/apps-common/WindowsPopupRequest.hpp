@@ -10,7 +10,7 @@
 namespace gui::popup
 {
     /// Blueprint to create popup window/handle popup action if there is no window when required
-    typedef std::function<bool(gui::popup::ID, std::unique_ptr<gui::PopupRequestParams> &)> Blueprint;
+    using Blueprint = std::function<bool(gui::popup::ID, std::unique_ptr<gui::PopupRequestParams> &)>;
 
     /// sortable class to select holding all data to handle popup
     class Request

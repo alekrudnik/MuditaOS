@@ -41,7 +41,7 @@ namespace app
 
         auto msg = dynamic_cast<db::NotificationMessage *>(msgl);
         if (msg != nullptr) {
-            handleUI_DBNotification(msg, [](sys::Message *m, const std::string & /*name*/) {
+            userInterfaceDBNotification(msg, [](sys::Message *m, [[maybe_unused]] const std::string &) {
                 auto msg = dynamic_cast<db::NotificationMessage *>(m);
                 return (msg != nullptr) && msg->interface == db::Interface::Name::AlarmEvents;
             });

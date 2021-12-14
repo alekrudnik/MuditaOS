@@ -138,8 +138,8 @@ namespace app
             return retMsg;
         }
         if (auto msg = dynamic_cast<db::NotificationMessage *>(msgl); msg != nullptr) {
-            handleUI_DBNotification(msgl,
-                                    [&](sys::Message * /*unused*/, const std::string & /*unused*/) { return true; });
+            userInterfaceDBNotification(
+                msgl, [&]([[maybe_unused]] sys::Message *, [[maybe_unused]] const std::string &) { return true; });
             return sys::msgHandled();
         }
         return handleAsyncResponse(resp);

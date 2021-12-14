@@ -51,9 +51,10 @@ namespace app
             return retMsg;
         }
 
-        if (handleUI_DBNotification(msgl, [&](sys::Message *, const std::string &) {
-                return msgl->messageType == MessageType::DBServiceNotification;
-            })) {
+        if (userInterfaceDBNotification(msgl,
+                                        [&]([[maybe_unused]] sys::Message *, [[maybe_unused]] const std::string &) {
+                                            return msgl->messageType == MessageType::DBServiceNotification;
+                                        })) {
             return sys::msgHandled();
         }
 

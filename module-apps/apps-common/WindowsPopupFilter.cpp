@@ -13,7 +13,7 @@ namespace gui::popup
         this->stack = stack;
     }
 
-    bool Filter::is_ok(const gui::PopupRequestParams &params) const
+    bool Filter::isPermitted(const gui::PopupRequestParams &params) const
     {
         for (const auto &filter : appDependentFilter) {
             if (filter != nullptr && not filter(params)) {

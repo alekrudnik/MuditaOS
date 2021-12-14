@@ -158,13 +158,13 @@ TEST_CASE("pop")
     }
 }
 
-TEST_CASE("popTo")
+TEST_CASE("pop")
 {
     app::WindowsStack stack;
 
     SECTION("empty")
     {
-        REQUIRE(!stack.popTo("window"));
+        REQUIRE(!stack.pop("window"));
     }
 
     SECTION("not empty")
@@ -175,7 +175,7 @@ TEST_CASE("popTo")
         REQUIRE(count > 1);
         add_dummy_windows(stack, count, naming_foo);
         // get back to half of stack
-        REQUIRE(stack.popTo(naming_foo(count / 2)));
+        REQUIRE(stack.pop(naming_foo(count / 2)));
         // po the rest of stack
         for (unsigned int i = 0; i < count / 2 + 1; ++i) {
             REQUIRE(stack.pop());
